@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Upload File</title>
+</head>
+<body>
+
+<h2>Upload File to S3</h2>
+
+<input type="file" id="fileInput" />
+<button onclick="uploadFile()">Upload</button>
+
+<script>
+async function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+
+    if (!file) {
+        alert("Select a file first");
+        return;
+    }
+
+    // 
+    const response = await fetch("https://zd002zpn66.execute-api.ap-south-1.amazonaws.com/get-upload-url");
+
+    const data = await response.json();
+   const body = data.body ? JSON.parse(data.body) : data;
+
+    // Upload to S3
+   await fetch(body.uploadURL, {
+    method: "PUT",
+    body: file
+});
+    alert("File uploaded successfully!");
+}
+</script>
+
+</body>
+</html>
